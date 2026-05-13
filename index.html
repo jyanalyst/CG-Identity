@@ -112,18 +112,9 @@
       flex-shrink: 0;
     }
 
-    .eyebrow {
-      font-family: 'DM Mono', monospace;
-      font-size: 9px;
-      letter-spacing: 4px;
-      text-transform: uppercase;
-      color: var(--gold);
-    }
-
     .step-label {
       font-family: 'DM Mono', monospace;
-      font-size: 9px;
-      letter-spacing: 3px;
+      font-size: 9px; letter-spacing: 3px;
       color: var(--text-dim);
     }
 
@@ -191,7 +182,7 @@
       animation: fadeUp 0.7s ease 0.2s forwards;
     }
     .w-title {
-      font-size: clamp(44px, 13vw, 68px);
+      font-size: clamp(40px, 12vw, 64px);
       font-weight: 300; line-height: 1.0;
       color: var(--text);
       opacity: 0;
@@ -213,7 +204,7 @@
       animation: fadeUp 0.7s ease 0.8s forwards;
     }
     .w-question {
-      font-size: clamp(17px, 4.5vw, 22px);
+      font-size: clamp(16px, 4vw, 20px);
       font-weight: 300; line-height: 1.5;
       color: var(--text); margin-bottom: 36px;
       opacity: 0;
@@ -237,7 +228,7 @@
     }
     .w-btn:active { background: var(--gold-glow); transform: scale(0.97); }
 
-    /* ── QUESTION SCREENS (Q1, Q2) ── */
+    /* ── QUESTION SCREENS ── */
     .q-screen { z-index: 1; padding-bottom: 32px; }
 
     .q-body {
@@ -378,15 +369,25 @@
     /* ── SCREEN: DECLARATION FULL ── */
     #screen-declaration {
       z-index: 1;
-      padding: 48px 32px 36px;
-      justify-content: space-between;
+      overflow: hidden;
     }
-    .d-top { display: flex; align-items: center; justify-content: space-between; }
-    .d-middle {
+
+    .d-scroll {
       flex: 1;
-      display: flex; flex-direction: column;
-      justify-content: center; padding: 28px 0;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      padding: 24px 32px 0;
     }
+    .d-scroll::-webkit-scrollbar { display: none; }
+
+    .d-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 48px 32px 0;
+      flex-shrink: 0;
+    }
+
     .d-category {
       font-family: 'DM Mono', monospace;
       font-size: 9px; letter-spacing: 4px;
@@ -394,12 +395,51 @@
       margin-bottom: 18px;
     }
     .d-rule { width: 40px; height: 1px; background: var(--gold); margin-bottom: 24px; }
+
     .d-text {
       font-size: clamp(20px, 5.5vw, 28px);
       font-weight: 300; line-height: 1.7;
       color: var(--text); font-style: italic;
+      margin-bottom: 28px;
     }
-    .d-bottom { display: flex; flex-direction: column; gap: 10px; }
+
+    /* SCRIPTURE BOX */
+    .scripture-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-left: 2px solid var(--gold);
+      padding: 16px 18px;
+      margin-bottom: 12px;
+    }
+
+    .scripture-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 8px; letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--gold-dim);
+      margin-bottom: 8px;
+    }
+
+    .scripture-ref {
+      font-family: 'DM Mono', monospace;
+      font-size: 10px; letter-spacing: 2px;
+      color: var(--gold);
+      margin-bottom: 6px;
+    }
+
+    .scripture-text {
+      font-size: 14px; font-weight: 300;
+      font-style: italic; color: var(--text-mid);
+      line-height: 1.7;
+    }
+
+    .d-bottom {
+      display: flex; flex-direction: column;
+      gap: 10px;
+      padding: 16px 32px 36px;
+      flex-shrink: 0;
+    }
+
     .d-hint {
       font-family: 'DM Mono', monospace;
       font-size: 9px; letter-spacing: 2px;
@@ -430,7 +470,12 @@
       padding: 18px 20px;
       font-size: 15px; font-style: italic;
       font-weight: 300; color: var(--text);
-      line-height: 1.6;
+      line-height: 1.6; margin-bottom: 10px;
+    }
+    .s-ref {
+      font-family: 'DM Mono', monospace;
+      font-size: 9px; letter-spacing: 2px;
+      color: var(--gold-dim); text-transform: uppercase;
     }
     .s-bottom { display: flex; flex-direction: column; gap: 10px; }
 
@@ -460,6 +505,13 @@
       font-size: 15px; font-style: italic;
       font-weight: 300; color: var(--text);
       line-height: 1.6; text-align: left;
+      margin-bottom: 8px;
+    }
+    .p-ref {
+      font-family: 'DM Mono', monospace;
+      font-size: 9px; letter-spacing: 2px;
+      color: var(--gold-dim); text-transform: uppercase;
+      text-align: left;
     }
     .p-bottom { display: flex; flex-direction: column; gap: 10px; }
 
@@ -483,7 +535,7 @@
     <button class="w-btn" onclick="goTo('screen-q1','up')">Begin →</button>
   </div>
 
-  <!-- SCREEN 2: Q1 — EMPTY TANK -->
+  <!-- SCREEN 2: Q1 -->
   <div class="screen q-screen" id="screen-q1">
     <div class="screen-header">
       <button class="btn-back" onclick="goTo('screen-welcome','down')">← Back</button>
@@ -505,7 +557,7 @@
     </div>
   </div>
 
-  <!-- SCREEN 3: Q2 — WHAT DRAINS YOU -->
+  <!-- SCREEN 3: Q2 -->
   <div class="screen q-screen" id="screen-q2">
     <div class="screen-header">
       <button class="btn-back" onclick="goTo('screen-q1','down')">← Back</button>
@@ -530,7 +582,7 @@
     </div>
   </div>
 
-  <!-- SCREEN 4: Q3 — CHOOSE DECLARATION -->
+  <!-- SCREEN 4: Q3 — CHOOSE -->
   <div class="screen" id="screen-q3">
     <div class="q3-header">
       <div class="q3-top">
@@ -544,16 +596,17 @@
     <div class="cards-scroll" id="cards-container"></div>
   </div>
 
-  <!-- SCREEN 5: DECLARATION FULL VIEW -->
+  <!-- SCREEN 5: DECLARATION FULL -->
   <div class="screen" id="screen-declaration">
     <div class="d-top">
       <button class="btn-back" onclick="goTo('screen-q3','down')">← Back</button>
       <div class="step-label">Read slowly</div>
     </div>
-    <div class="d-middle">
+    <div class="d-scroll">
       <div class="d-category" id="decl-category"></div>
       <div class="d-rule"></div>
       <div class="d-text" id="decl-text"></div>
+      <div id="scriptures-container"></div>
     </div>
     <div class="d-bottom">
       <div class="d-hint">Read this slowly.<br>Let it settle.<br>Then share it with your group.</div>
@@ -574,6 +627,7 @@
       <div class="s-rule"></div>
       <div class="s-instruction">Show them your declaration. Tell them which area drains you most. Tell them why this is the one you need to hear.</div>
       <div class="s-box" id="share-preview"></div>
+      <div class="s-ref" id="share-ref"></div>
     </div>
     <div class="s-bottom">
       <button class="btn-gold" onclick="goTo('screen-prayer','up')">Ready for prayer →</button>
@@ -597,6 +651,7 @@
         Speak it like you mean it —<br>because the Father does.
       </div>
       <div class="p-box" id="prayer-preview"></div>
+      <div class="p-ref" id="prayer-ref"></div>
     </div>
     <div class="p-bottom">
       <button class="btn-gold" onclick="goTo('screen-welcome','up')">Done — start again</button>
@@ -610,52 +665,172 @@
     {
       category: "Waiting & Unanswered Prayer",
       short: "I am not forgotten...",
-      text: "I am not forgotten. My waiting is not evidence of God's absence. He sees me — and He has not moved on."
+      text: "I am not forgotten. My waiting is not evidence of God's absence. He sees me — and He has not moved on.",
+      scriptures: [
+        {
+          ref: "Isaiah 49:15–16",
+          text: "I will not forget you. See, I have engraved you on the palms of my hands."
+        },
+        {
+          ref: "Psalm 40:1",
+          text: "I waited patiently for the Lord; he turned to me and heard my cry."
+        }
+      ]
     },
     {
       category: "Loss & Grief",
       short: "I am held in the middle of it...",
-      text: "I am held — not despite what I have lost, but in the middle of it. My pain does not disqualify me from the Father's love."
+      text: "I am held — not despite what I have lost, but in the middle of it. My pain does not disqualify me from the Father's love.",
+      scriptures: [
+        {
+          ref: "Psalm 34:18",
+          text: "The Lord is close to the brokenhearted and saves those who are crushed in spirit."
+        },
+        {
+          ref: "Romans 8:38–39",
+          text: "Neither death nor life... nor anything else in all creation, will be able to separate us from the love of God."
+        }
+      ]
     },
     {
       category: "Feeling Not Enough",
-      short: "My worth was settled at the cross...",
-      text: "I am enough — not because of what I have achieved, but because of what Christ has already done. My worth was settled at the cross — not at my last performance."
+      short: "I am complete in Christ...",
+      text: "I am complete in Christ — not because of what I have achieved, but because of what He has already done. My worth was settled at the cross — not at my last performance.",
+      scriptures: [
+        {
+          ref: "Colossians 2:10",
+          text: "You are complete in Him, who is the head of all principality and power."
+        },
+        {
+          ref: "1 Peter 1:18–19",
+          text: "You were redeemed... with the precious blood of Christ, a lamb without blemish or defect."
+        }
+      ]
     },
     {
       category: "Single & Waiting",
       short: "I am fully loved, fully seen, fully known...",
-      text: "I am complete in Christ — not half a person waiting to be whole. I am fully loved, fully seen, and fully known — today, not just when the answer comes."
+      text: "I am complete in Christ — not half a person waiting to be whole. I am fully loved, fully seen, and fully known — today, not just when the answer comes.",
+      scriptures: [
+        {
+          ref: "Colossians 2:10",
+          text: "You are complete in Him."
+        },
+        {
+          ref: "Psalm 139:1–3",
+          text: "You have searched me, Lord, and you know me. You know when I sit and when I rise."
+        },
+        {
+          ref: "1 John 3:1",
+          text: "See what great love the Father has lavished on us, that we should be called children of God."
+        }
+      ]
     },
     {
       category: "Parenting & Falling Short",
       short: "I am not disqualified by my worst moments...",
-      text: "I am not disqualified by my worst moments. I am a child of God who is learning — and the same grace I need to receive, I can give."
+      text: "I am not disqualified by my worst moments. I am a child of God who is learning — and the same grace I need to receive, I can give.",
+      scriptures: [
+        {
+          ref: "Romans 8:1",
+          text: "There is now no condemnation for those who are in Christ Jesus."
+        },
+        {
+          ref: "2 Corinthians 12:9",
+          text: "My grace is sufficient for you, for my power is made perfect in weakness."
+        },
+        {
+          ref: "Ephesians 4:32",
+          text: "Be kind and compassionate to one another, forgiving each other, just as in Christ God forgave you."
+        }
+      ]
     },
     {
       category: "Sickness & Unanswered Healing",
       short: "My body does not define my identity...",
-      text: "My body does not define my identity. I am the righteousness of God in Christ — whole in spirit, held in body, and not abandoned in my waiting."
+      text: "My body does not define my identity. I am the righteousness of God in Christ — whole in spirit, held in body, and not abandoned in my waiting.",
+      scriptures: [
+        {
+          ref: "2 Corinthians 5:21",
+          text: "God made him who had no sin to be sin for us, so that in him we might become the righteousness of God."
+        },
+        {
+          ref: "2 Corinthians 4:16",
+          text: "Though outwardly we are wasting away, yet inwardly we are being renewed day by day."
+        },
+        {
+          ref: "Hebrews 13:5",
+          text: "Never will I leave you; never will I forsake you."
+        }
+      ]
     },
     {
       category: "Work & Performance Pressure",
       short: "My value is not my output...",
-      text: "My value is not my output. I am not what I produce. I am a child of God — and that identity does not fluctuate with my results."
+      text: "My value is not my output. I am not what I produce. I am a child of God — and that identity does not fluctuate with my results.",
+      scriptures: [
+        {
+          ref: "1 John 3:1",
+          text: "See what great love the Father has lavished on us, that we should be called children of God. And that is what we are!"
+        },
+        {
+          ref: "Romans 8:16",
+          text: "The Spirit himself testifies with our spirit that we are God's children."
+        }
+      ]
     },
     {
       category: "Shame & Past Failure",
       short: "I am who the Father says I am...",
-      text: "I am not what I did. I am not what was done to me. I am who the Father says I am — and He has never revised that declaration."
+      text: "I am not what I did. I am not what was done to me. I am who the Father says I am — and He has never revised that declaration.",
+      scriptures: [
+        {
+          ref: "Isaiah 43:25",
+          text: "I, even I, am he who blots out your transgressions, for my own sake, and remembers your sins no more."
+        },
+        {
+          ref: "Romans 8:1",
+          text: "There is now no condemnation for those who are in Christ Jesus."
+        },
+        {
+          ref: "2 Corinthians 5:17",
+          text: "If anyone is in Christ, the new creation has come: the old has gone, the new is here!"
+        }
+      ]
     },
     {
       category: "Fear & Feeling Unsettled",
       short: "I am anchored in what He said...",
-      text: "I am not moved by what I see — because I am anchored in what He said. The Lord is at my right hand. I will not be shaken."
+      text: "I am not moved by what I see — because I am anchored in what He said. The Lord is at my right hand. I will not be shaken.",
+      scriptures: [
+        {
+          ref: "Psalm 16:8",
+          text: "I have set the Lord always before me. Because he is at my right hand, I will not be shaken."
+        },
+        {
+          ref: "2 Corinthians 5:7",
+          text: "We walk by faith, not by sight."
+        }
+      ]
     },
     {
       category: "For Your Children",
       short: "You are loved before you perform...",
-      text: "You are loved before you perform. You are valued before you achieve. You are mine — and nothing you do will ever change that."
+      text: "You are loved before you perform. You are valued before you achieve. You are mine — and nothing you do will ever change that.",
+      scriptures: [
+        {
+          ref: "Luke 3:22",
+          text: "You are my beloved Son; with you I am well pleased. (Spoken before Jesus did anything.)"
+        },
+        {
+          ref: "Romans 8:38–39",
+          text: "Nothing in all creation will be able to separate us from the love of God that is in Christ Jesus our Lord."
+        },
+        {
+          ref: "1 John 4:19",
+          text: "We love because he first loved us."
+        }
+      ]
     }
   ];
 
@@ -688,10 +863,33 @@
 
   function selectDeclaration(i) {
     const d = declarations[i];
+
+    // Declaration screen
     document.getElementById('decl-category').textContent = d.category;
     document.getElementById('decl-text').textContent = d.text;
+
+    // Build scripture boxes
+    const sc = document.getElementById('scriptures-container');
+    sc.innerHTML = '';
+    d.scriptures.forEach(s => {
+      const box = document.createElement('div');
+      box.className = 'scripture-box';
+      box.innerHTML = `
+        <div class="scripture-label">Scripture</div>
+        <div class="scripture-ref">${s.ref}</div>
+        <div class="scripture-text">"${s.text}"</div>
+      `;
+      sc.appendChild(box);
+    });
+
+    // Share screen
     document.getElementById('share-preview').textContent = d.text;
+    document.getElementById('share-ref').textContent = d.scriptures.map(s => s.ref).join(' · ');
+
+    // Prayer screen
     document.getElementById('prayer-preview').textContent = d.text;
+    document.getElementById('prayer-ref').textContent = d.scriptures.map(s => s.ref).join(' · ');
+
     goTo('screen-declaration', 'up');
   }
 
@@ -716,6 +914,12 @@
     if (id === 'screen-q3') {
       const s = document.querySelector('.cards-scroll');
       if (s) s.scrollTop = 0;
+    }
+
+    // Scroll declaration to top
+    if (id === 'screen-declaration') {
+      const ds = document.querySelector('.d-scroll');
+      if (ds) ds.scrollTop = 0;
     }
   }
 </script>
