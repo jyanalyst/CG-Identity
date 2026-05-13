@@ -15,11 +15,10 @@
       --border: #2A2A2A;
       --gold: #C9A84C;
       --gold-dim: #8A6E2F;
-      --gold-glow: rgba(201, 168, 76, 0.12);
+      --gold-glow: rgba(201, 168, 76, 0.10);
       --text: #F0EDE6;
       --text-dim: #6B6560;
       --text-mid: #A09890;
-      --white: #FFFFFF;
     }
 
     html, body {
@@ -40,7 +39,7 @@
       overflow: hidden;
     }
 
-    /* ── SCREENS ── */
+    /* SCREENS */
     .screen {
       position: absolute;
       inset: 0;
@@ -48,49 +47,130 @@
       flex-direction: column;
       opacity: 0;
       pointer-events: none;
-      transition: opacity 0.5s ease, transform 0.5s ease;
-      transform: translateY(20px);
+      transition: opacity 0.45s ease, transform 0.45s ease;
+      transform: translateY(24px);
     }
     .screen.active {
       opacity: 1;
       pointer-events: all;
       transform: translateY(0);
     }
-    .screen.exit {
-      opacity: 0;
-      transform: translateY(-20px);
-    }
+    .screen.exit-up { opacity: 0; transform: translateY(-24px); }
+    .screen.exit-down { opacity: 0; transform: translateY(24px); }
 
-    /* ── AMBIENT BACKGROUND ── */
+    /* AMBIENT */
     .ambient {
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      z-index: 0;
+      position: fixed; inset: 0;
+      pointer-events: none; z-index: 0;
     }
     .ambient::before {
       content: '';
       position: absolute;
-      top: -30%;
-      left: -20%;
-      width: 60%;
-      height: 60%;
+      top: -30%; left: -20%;
+      width: 60%; height: 60%;
       background: radial-gradient(ellipse, rgba(201,168,76,0.06) 0%, transparent 70%);
       animation: drift 8s ease-in-out infinite alternate;
     }
     .ambient::after {
       content: '';
       position: absolute;
-      bottom: -20%;
-      right: -20%;
-      width: 50%;
-      height: 50%;
+      bottom: -20%; right: -20%;
+      width: 50%; height: 50%;
       background: radial-gradient(ellipse, rgba(201,168,76,0.04) 0%, transparent 70%);
       animation: drift 10s ease-in-out infinite alternate-reverse;
     }
     @keyframes drift {
-      from { transform: translate(0, 0); }
-      to { transform: translate(30px, 20px); }
+      from { transform: translate(0,0); }
+      to { transform: translate(30px,20px); }
+    }
+
+    /* GRAIN */
+    .grain {
+      position: fixed; inset: 0;
+      pointer-events: none; z-index: 999;
+      opacity: 0.025;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+      background-size: 128px;
+    }
+
+    /* PROGRESS */
+    .progress-bar {
+      position: fixed; top: 0; left: 0;
+      height: 2px;
+      background: var(--gold);
+      transition: width 0.5s ease;
+      z-index: 100;
+      width: 0%;
+    }
+
+    /* SHARED */
+    .screen-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 48px 28px 0;
+      flex-shrink: 0;
+    }
+
+    .eyebrow {
+      font-family: 'DM Mono', monospace;
+      font-size: 9px;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--gold);
+    }
+
+    .step-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 9px;
+      letter-spacing: 3px;
+      color: var(--text-dim);
+    }
+
+    .btn-back {
+      background: none; border: none;
+      color: var(--text-dim);
+      font-family: 'DM Mono', monospace;
+      font-size: 9px; letter-spacing: 3px;
+      text-transform: uppercase;
+      cursor: pointer; padding: 0;
+      -webkit-tap-highlight-color: transparent;
+      transition: color 0.2s;
+    }
+    .btn-back:active { color: var(--text); }
+
+    .btn-gold {
+      background: var(--gold); border: none;
+      color: #0D0D0D;
+      font-family: 'DM Mono', monospace;
+      font-size: 11px; letter-spacing: 3px;
+      text-transform: uppercase;
+      padding: 18px 32px;
+      cursor: pointer;
+      transition: all 0.2s;
+      -webkit-tap-highlight-color: transparent;
+      width: 100%;
+    }
+    .btn-gold:active { opacity: 0.85; transform: scale(0.98); }
+
+    .btn-ghost {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text-dim);
+      font-family: 'DM Mono', monospace;
+      font-size: 11px; letter-spacing: 3px;
+      text-transform: uppercase;
+      padding: 14px 32px;
+      cursor: pointer;
+      transition: all 0.2s;
+      -webkit-tap-highlight-color: transparent;
+      width: 100%;
+    }
+    .btn-ghost:active { border-color: var(--gold-dim); color: var(--text); }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
     /* ── SCREEN 1: WELCOME ── */
@@ -101,481 +181,425 @@
       text-align: center;
       z-index: 1;
     }
-
-    .welcome-eyebrow {
+    .w-eyebrow {
       font-family: 'DM Mono', monospace;
-      font-size: 10px;
-      letter-spacing: 4px;
+      font-size: 9px; letter-spacing: 5px;
       text-transform: uppercase;
       color: var(--gold);
-      margin-bottom: 32px;
+      margin-bottom: 28px;
       opacity: 0;
-      animation: fadeUp 0.8s ease 0.3s forwards;
+      animation: fadeUp 0.7s ease 0.2s forwards;
     }
-
-    .welcome-title {
-      font-size: clamp(48px, 14vw, 72px);
-      font-weight: 300;
-      line-height: 1.0;
-      letter-spacing: -1px;
+    .w-title {
+      font-size: clamp(44px, 13vw, 68px);
+      font-weight: 300; line-height: 1.0;
       color: var(--text);
-      margin-bottom: 8px;
       opacity: 0;
-      animation: fadeUp 0.8s ease 0.5s forwards;
+      animation: fadeUp 0.7s ease 0.4s forwards;
     }
-
-    .welcome-title em {
-      font-style: italic;
-      color: var(--gold);
-    }
-
-    .welcome-subtitle {
-      font-size: 16px;
-      font-weight: 300;
-      color: var(--text-mid);
-      line-height: 1.7;
-      margin: 28px 0 48px;
-      font-style: italic;
+    .w-title em { font-style: italic; color: var(--gold); }
+    .w-sub {
+      font-size: 15px; font-weight: 300;
+      font-style: italic; color: var(--text-dim);
+      line-height: 1.7; margin: 20px 0 36px;
       opacity: 0;
-      animation: fadeUp 0.8s ease 0.7s forwards;
+      animation: fadeUp 0.7s ease 0.6s forwards;
     }
-
-    .welcome-divider {
-      width: 1px;
-      height: 48px;
+    .w-rule {
+      width: 1px; height: 40px;
       background: linear-gradient(to bottom, transparent, var(--gold), transparent);
-      margin: 0 auto 48px;
+      margin: 0 auto 36px;
       opacity: 0;
-      animation: fadeUp 0.8s ease 0.9s forwards;
+      animation: fadeUp 0.7s ease 0.8s forwards;
     }
-
-    .welcome-question {
-      font-size: clamp(20px, 5vw, 26px);
-      font-weight: 300;
-      line-height: 1.4;
-      color: var(--text);
-      margin-bottom: 48px;
+    .w-question {
+      font-size: clamp(17px, 4.5vw, 22px);
+      font-weight: 300; line-height: 1.5;
+      color: var(--text); margin-bottom: 36px;
       opacity: 0;
-      animation: fadeUp 0.8s ease 1.1s forwards;
+      animation: fadeUp 0.7s ease 1.0s forwards;
     }
-
-    .btn-primary {
+    .w-btn {
       display: inline-flex;
-      align-items: center;
-      gap: 12px;
+      align-items: center; gap: 12px;
       background: transparent;
       border: 1px solid var(--gold);
       color: var(--gold);
       font-family: 'DM Mono', monospace;
-      font-size: 11px;
-      letter-spacing: 3px;
+      font-size: 10px; letter-spacing: 3px;
       text-transform: uppercase;
       padding: 16px 32px;
       cursor: pointer;
-      transition: all 0.3s ease;
+      transition: all 0.3s;
       opacity: 0;
-      animation: fadeUp 0.8s ease 1.3s forwards;
+      animation: fadeUp 0.7s ease 1.2s forwards;
       -webkit-tap-highlight-color: transparent;
     }
-    .btn-primary:active {
-      background: var(--gold-glow);
-      transform: scale(0.97);
+    .w-btn:active { background: var(--gold-glow); transform: scale(0.97); }
+
+    /* ── QUESTION SCREENS (Q1, Q2) ── */
+    .q-screen { z-index: 1; padding-bottom: 32px; }
+
+    .q-body {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 28px 28px;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
     }
 
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(16px); }
-      to { opacity: 1; transform: translateY(0); }
+    .q-number {
+      font-family: 'DM Mono', monospace;
+      font-size: 9px; letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--gold); margin-bottom: 16px;
     }
 
-    /* ── SCREEN 2: CHOOSE ── */
-    #screen-choose {
-      z-index: 1;
-      overflow: hidden;
+    .q-question {
+      font-size: clamp(24px, 7vw, 34px);
+      font-weight: 300; line-height: 1.3;
+      color: var(--text); margin-bottom: 20px;
+    }
+    .q-question em { font-style: italic; color: var(--gold); }
+
+    .q-rule {
+      width: 40px; height: 1px;
+      background: var(--gold);
+      margin-bottom: 20px;
     }
 
-    .choose-header {
-      padding: 48px 28px 24px;
+    .q-context {
+      font-size: 16px; font-weight: 300;
+      font-style: italic; color: var(--text-mid);
+      line-height: 1.8; margin-bottom: 20px;
+    }
+
+    .q-prompt {
+      font-family: 'DM Mono', monospace;
+      font-size: 10px; letter-spacing: 2px;
+      color: var(--text-dim);
+      line-height: 2; text-transform: uppercase;
+    }
+    .q-prompt span { color: var(--gold-dim); }
+
+    .q-footer {
+      padding: 0 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
       flex-shrink: 0;
     }
 
-    .choose-eyebrow {
-      font-family: 'DM Mono', monospace;
-      font-size: 10px;
-      letter-spacing: 4px;
-      text-transform: uppercase;
-      color: var(--gold-dim);
+    /* ── SCREEN Q3: CHOOSE ── */
+    #screen-q3 { z-index: 1; overflow: hidden; }
+
+    .q3-header {
+      padding: 44px 28px 16px;
+      flex-shrink: 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .q3-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
       margin-bottom: 16px;
     }
 
-    .choose-title {
-      font-size: clamp(26px, 7vw, 36px);
-      font-weight: 300;
-      line-height: 1.2;
-      color: var(--text);
+    .q3-title {
+      font-size: clamp(20px, 5.5vw, 26px);
+      font-weight: 300; line-height: 1.3;
+      color: var(--text); margin: 8px 0;
     }
+    .q3-title em { font-style: italic; color: var(--gold); }
 
-    .choose-title em {
-      font-style: italic;
-      color: var(--gold);
+    .q3-hint {
+      font-family: 'DM Mono', monospace;
+      font-size: 9px; letter-spacing: 2px;
+      color: var(--text-dim);
+      text-transform: uppercase;
     }
 
     .cards-scroll {
       flex: 1;
       overflow-y: auto;
-      padding: 8px 28px 48px;
+      padding: 12px 28px 40px;
       -webkit-overflow-scrolling: touch;
     }
     .cards-scroll::-webkit-scrollbar { display: none; }
 
-    .declaration-card {
+    .decl-card {
       background: var(--surface);
       border: 1px solid var(--border);
-      border-radius: 2px;
-      padding: 20px 24px;
-      margin-bottom: 10px;
+      padding: 16px 18px;
+      margin-bottom: 8px;
       cursor: pointer;
-      transition: all 0.25s ease;
+      transition: all 0.2s;
       display: flex;
       align-items: center;
-      gap: 16px;
+      gap: 14px;
       -webkit-tap-highlight-color: transparent;
       position: relative;
       overflow: hidden;
     }
-    .declaration-card::before {
+    .decl-card::before {
       content: '';
       position: absolute;
-      left: 0;
-      top: 0;
-      bottom: 0;
+      left: 0; top: 0; bottom: 0;
       width: 2px;
       background: var(--gold);
       transform: scaleY(0);
-      transition: transform 0.25s ease;
+      transition: transform 0.2s;
     }
-    .declaration-card:active {
-      background: var(--gold-glow);
-      border-color: var(--gold-dim);
-    }
-    .declaration-card:active::before {
-      transform: scaleY(1);
-    }
+    .decl-card:active { background: var(--gold-glow); border-color: var(--gold-dim); }
+    .decl-card:active::before { transform: scaleY(1); }
 
-    .card-number {
+    .card-num {
       font-family: 'DM Mono', monospace;
-      font-size: 11px;
-      color: var(--gold-dim);
-      letter-spacing: 2px;
-      flex-shrink: 0;
-      width: 24px;
+      font-size: 10px; color: var(--gold-dim);
+      letter-spacing: 2px; flex-shrink: 0; width: 22px;
     }
-
-    .card-content {
-      flex: 1;
-    }
-
-    .card-category {
+    .card-body { flex: 1; }
+    .card-cat {
       font-family: 'DM Mono', monospace;
-      font-size: 9px;
-      letter-spacing: 3px;
+      font-size: 8px; letter-spacing: 3px;
       text-transform: uppercase;
-      color: var(--text-dim);
+      color: var(--text-dim); margin-bottom: 3px;
+    }
+    .card-pre {
+      font-size: 14px; font-weight: 300;
+      color: var(--text-mid); line-height: 1.4;
+      font-style: italic;
+    }
+    .card-arr { color: var(--gold-dim); font-size: 14px; flex-shrink: 0; }
+
+    /* ── SCREEN: DECLARATION FULL ── */
+    #screen-declaration {
+      z-index: 1;
+      padding: 48px 32px 36px;
+      justify-content: space-between;
+    }
+    .d-top { display: flex; align-items: center; justify-content: space-between; }
+    .d-middle {
+      flex: 1;
+      display: flex; flex-direction: column;
+      justify-content: center; padding: 28px 0;
+    }
+    .d-category {
+      font-family: 'DM Mono', monospace;
+      font-size: 9px; letter-spacing: 4px;
+      text-transform: uppercase; color: var(--gold);
+      margin-bottom: 18px;
+    }
+    .d-rule { width: 40px; height: 1px; background: var(--gold); margin-bottom: 24px; }
+    .d-text {
+      font-size: clamp(20px, 5.5vw, 28px);
+      font-weight: 300; line-height: 1.7;
+      color: var(--text); font-style: italic;
+    }
+    .d-bottom { display: flex; flex-direction: column; gap: 10px; }
+    .d-hint {
+      font-family: 'DM Mono', monospace;
+      font-size: 9px; letter-spacing: 2px;
+      color: var(--text-dim); text-align: center;
+      line-height: 2; text-transform: uppercase;
       margin-bottom: 4px;
     }
 
-    .card-preview {
-      font-size: 15px;
-      font-weight: 300;
-      color: var(--text-mid);
-      line-height: 1.4;
-      font-style: italic;
-    }
-
-    .card-arrow {
-      color: var(--gold-dim);
-      font-size: 16px;
-      flex-shrink: 0;
-      transition: transform 0.2s ease;
-    }
-    .declaration-card:active .card-arrow {
-      transform: translateX(4px);
-    }
-
-    /* ── SCREEN 3: DECLARATION ── */
-    #screen-declaration {
+    /* ── SCREEN: SHARE ── */
+    #screen-share {
       z-index: 1;
-      justify-content: space-between;
-      padding: 48px 32px;
-    }
-
-    .decl-top {
-      display: flex;
-      align-items: center;
+      padding: 48px 32px 36px;
       justify-content: space-between;
     }
-
-    .btn-back {
-      background: none;
-      border: none;
-      color: var(--text-dim);
-      font-family: 'DM Mono', monospace;
-      font-size: 10px;
-      letter-spacing: 3px;
-      text-transform: uppercase;
-      cursor: pointer;
-      padding: 8px 0;
-      -webkit-tap-highlight-color: transparent;
-      transition: color 0.2s;
+    .s-middle { flex: 1; display: flex; flex-direction: column; justify-content: center; }
+    .s-icon { font-size: 40px; margin-bottom: 20px; }
+    .s-title { font-size: clamp(26px, 7vw, 36px); font-weight: 300; line-height: 1.2; margin-bottom: 4px; }
+    .s-title em { font-style: italic; color: var(--gold); }
+    .s-rule { width: 40px; height: 1px; background: var(--gold); margin: 18px 0; }
+    .s-instruction {
+      font-size: 17px; font-weight: 300;
+      font-style: italic; color: var(--text-mid);
+      line-height: 1.8; margin-bottom: 20px;
     }
-    .btn-back:active { color: var(--text); }
-
-    .decl-step {
-      font-family: 'DM Mono', monospace;
-      font-size: 10px;
-      letter-spacing: 3px;
-      color: var(--gold-dim);
-    }
-
-    .decl-middle {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      padding: 32px 0;
-    }
-
-    .decl-category {
-      font-family: 'DM Mono', monospace;
-      font-size: 9px;
-      letter-spacing: 4px;
-      text-transform: uppercase;
-      color: var(--gold);
-      margin-bottom: 24px;
-    }
-
-    .decl-ornament {
-      width: 40px;
-      height: 1px;
-      background: var(--gold);
-      margin-bottom: 32px;
-    }
-
-    .decl-text {
-      font-size: clamp(22px, 6vw, 30px);
-      font-weight: 300;
-      line-height: 1.6;
-      color: var(--text);
-      font-style: italic;
-    }
-
-    .decl-text strong {
-      font-style: normal;
-      font-weight: 400;
-      color: var(--white);
-    }
-
-    .decl-bottom {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    .decl-instruction {
-      font-family: 'DM Mono', monospace;
-      font-size: 10px;
-      letter-spacing: 2px;
-      color: var(--text-dim);
-      text-align: center;
-      line-height: 1.8;
-      text-transform: uppercase;
-    }
-
-    .btn-secondary {
-      background: var(--gold);
-      border: none;
-      color: #0D0D0D;
-      font-family: 'DM Mono', monospace;
-      font-size: 11px;
-      letter-spacing: 3px;
-      text-transform: uppercase;
-      padding: 18px 32px;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      -webkit-tap-highlight-color: transparent;
-      width: 100%;
-    }
-    .btn-secondary:active {
-      opacity: 0.85;
-      transform: scale(0.98);
-    }
-
-    .btn-ghost {
-      background: transparent;
-      border: 1px solid var(--border);
-      color: var(--text-dim);
-      font-family: 'DM Mono', monospace;
-      font-size: 11px;
-      letter-spacing: 3px;
-      text-transform: uppercase;
-      padding: 14px 32px;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      -webkit-tap-highlight-color: transparent;
-      width: 100%;
-    }
-    .btn-ghost:active {
-      border-color: var(--gold-dim);
-      color: var(--text);
-    }
-
-    /* ── SCREEN 4: PRAYER ── */
-    #screen-prayer {
-      z-index: 1;
-      justify-content: space-between;
-      padding: 48px 32px;
-    }
-
-    .prayer-top {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .prayer-middle {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      text-align: center;
-      padding: 32px 0;
-    }
-
-    .prayer-icon {
-      font-size: 48px;
-      margin-bottom: 24px;
-      opacity: 0.8;
-    }
-
-    .prayer-title {
-      font-size: clamp(28px, 8vw, 40px);
-      font-weight: 300;
-      color: var(--text);
-      margin-bottom: 16px;
-      line-height: 1.2;
-    }
-
-    .prayer-title em {
-      font-style: italic;
-      color: var(--gold);
-    }
-
-    .prayer-divider {
-      width: 40px;
-      height: 1px;
-      background: var(--gold);
-      margin: 24px auto;
-    }
-
-    .prayer-instruction {
-      font-size: 17px;
-      font-weight: 300;
-      font-style: italic;
-      color: var(--text-mid);
-      line-height: 1.7;
-      margin-bottom: 32px;
-    }
-
-    .prayer-declaration-preview {
+    .s-box {
       background: var(--gold-glow);
       border: 1px solid var(--gold-dim);
-      padding: 20px 24px;
-      font-size: 15px;
-      font-style: italic;
-      font-weight: 300;
-      color: var(--text);
+      padding: 18px 20px;
+      font-size: 15px; font-style: italic;
+      font-weight: 300; color: var(--text);
       line-height: 1.6;
-      text-align: left;
     }
+    .s-bottom { display: flex; flex-direction: column; gap: 10px; }
 
-    .prayer-bottom {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
+    /* ── SCREEN: PRAYER ── */
+    #screen-prayer {
+      z-index: 1;
+      padding: 48px 32px 36px;
+      justify-content: space-between;
     }
+    .p-middle {
+      flex: 1; display: flex; flex-direction: column;
+      justify-content: center; text-align: center;
+    }
+    .p-icon { font-size: 40px; margin-bottom: 20px; }
+    .p-title { font-size: clamp(26px, 7vw, 36px); font-weight: 300; line-height: 1.2; margin-bottom: 4px; }
+    .p-title em { font-style: italic; color: var(--gold); }
+    .p-rule { width: 40px; height: 1px; background: var(--gold); margin: 18px auto; }
+    .p-instruction {
+      font-size: 17px; font-weight: 300;
+      font-style: italic; color: var(--text-mid);
+      line-height: 1.8; margin-bottom: 20px;
+    }
+    .p-box {
+      background: var(--gold-glow);
+      border: 1px solid var(--gold-dim);
+      padding: 18px 20px;
+      font-size: 15px; font-style: italic;
+      font-weight: 300; color: var(--text);
+      line-height: 1.6; text-align: left;
+    }
+    .p-bottom { display: flex; flex-direction: column; gap: 10px; }
 
-    /* ── GRAIN OVERLAY ── */
-    .grain {
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      z-index: 999;
-      opacity: 0.025;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
-      background-size: 128px;
-    }
   </style>
 </head>
 <body>
 
 <div class="ambient"></div>
 <div class="grain"></div>
+<div class="progress-bar" id="progress-bar"></div>
 
 <div class="app">
 
   <!-- SCREEN 1: WELCOME -->
   <div class="screen active" id="screen-welcome">
-    <div class="welcome-eyebrow">CG · Tonight</div>
-    <div class="welcome-title">Hear it<br><em>declared</em><br>over you.</div>
-    <div class="welcome-subtitle">Not what you tell yourself.<br>What the Father already said.</div>
-    <div class="welcome-divider"></div>
-    <div class="welcome-question">Which would you love to hear declared over you?</div>
-    <button class="btn-primary" onclick="goTo('screen-choose')">
-      Choose yours →
-    </button>
+    <div class="w-eyebrow">Care Group · Tonight</div>
+    <div class="w-title">Hear it<br><em>declared</em><br>over you.</div>
+    <div class="w-sub">Not what you tell yourself.<br>What the Father already said.</div>
+    <div class="w-rule"></div>
+    <div class="w-question">This will guide your group<br>through tonight's conversation.</div>
+    <button class="w-btn" onclick="goTo('screen-q1','up')">Begin →</button>
   </div>
 
-  <!-- SCREEN 2: CHOOSE -->
-  <div class="screen" id="screen-choose">
-    <div class="choose-header">
-      <div class="choose-eyebrow">Step 1 of 2</div>
-      <div class="choose-title">Which would you love<br>to hear <em>declared</em><br>over you?</div>
+  <!-- SCREEN 2: Q1 — EMPTY TANK -->
+  <div class="screen q-screen" id="screen-q1">
+    <div class="screen-header">
+      <button class="btn-back" onclick="goTo('screen-welcome','down')">← Back</button>
+      <div class="step-label">Question 1 of 3</div>
+    </div>
+    <div class="q-body">
+      <div class="q-number">Question 01</div>
+      <div class="q-question">Have you ever felt what it's like to be running on <em>empty?</em></div>
+      <div class="q-rule"></div>
+      <div class="q-context">When the jar is empty — we become someone we don't recognise. Reactive. Harsh. Withdrawn. The voice our family hears isn't the voice we want them to hear.</div>
+      <div class="q-prompt">
+        <span>Share with your group —</span><br>
+        What did running on empty look like for you?<br>
+        When did you last feel it?
+      </div>
+    </div>
+    <div class="q-footer">
+      <button class="btn-gold" onclick="goTo('screen-q2','up')">Next question →</button>
+    </div>
+  </div>
+
+  <!-- SCREEN 3: Q2 — WHAT DRAINS YOU -->
+  <div class="screen q-screen" id="screen-q2">
+    <div class="screen-header">
+      <button class="btn-back" onclick="goTo('screen-q1','down')">← Back</button>
+      <div class="step-label">Question 2 of 3</div>
+    </div>
+    <div class="q-body">
+      <div class="q-number">Question 02</div>
+      <div class="q-question">Which area of life <em>drains</em> your tank the fastest?</div>
+      <div class="q-rule"></div>
+      <div class="q-context">Work. Parenting. Marriage. Waiting. Sickness. Loneliness. The area that drains you most — is almost always the area where the enemy whispers loudest.</div>
+      <div class="q-prompt">
+        <span>He doesn't attack your strength.</span><br>
+        He attacks your empty place.<br><br>
+        <span>Share with your group —</span><br>
+        Where does the enemy whisper to you most?<br>
+        What does he say?
+      </div>
+    </div>
+    <div class="q-footer">
+      <button class="btn-gold" onclick="goTo('screen-q3','up')">Next question →</button>
+      <button class="btn-ghost" onclick="goTo('screen-q1','down')">← Back</button>
+    </div>
+  </div>
+
+  <!-- SCREEN 4: Q3 — CHOOSE DECLARATION -->
+  <div class="screen" id="screen-q3">
+    <div class="q3-header">
+      <div class="q3-top">
+        <button class="btn-back" onclick="goTo('screen-q2','down')">← Back</button>
+        <div class="step-label">Question 3 of 3</div>
+      </div>
+      <div class="q-number">Question 03</div>
+      <div class="q3-title">Which would you love to hear<br><em>declared</em> over you?</div>
+      <div class="q3-hint">Choose the one that speaks to your empty place</div>
     </div>
     <div class="cards-scroll" id="cards-container"></div>
   </div>
 
-  <!-- SCREEN 3: DECLARATION -->
+  <!-- SCREEN 5: DECLARATION FULL VIEW -->
   <div class="screen" id="screen-declaration">
-    <div class="decl-top">
-      <button class="btn-back" onclick="goTo('screen-choose')">← Back</button>
-      <div class="decl-step">Step 1 of 2</div>
+    <div class="d-top">
+      <button class="btn-back" onclick="goTo('screen-q3','down')">← Back</button>
+      <div class="step-label">Read slowly</div>
     </div>
-    <div class="decl-middle">
-      <div class="decl-category" id="decl-category"></div>
-      <div class="decl-ornament"></div>
-      <div class="decl-text" id="decl-text"></div>
+    <div class="d-middle">
+      <div class="d-category" id="decl-category"></div>
+      <div class="d-rule"></div>
+      <div class="d-text" id="decl-text"></div>
     </div>
-    <div class="decl-bottom">
-      <div class="decl-instruction">Read this slowly.<br>Let it settle.<br>Then show it to your partner.</div>
-      <button class="btn-secondary" onclick="goTo('screen-prayer')">Show my partner →</button>
-      <button class="btn-ghost" onclick="goTo('screen-choose')">Choose a different one</button>
+    <div class="d-bottom">
+      <div class="d-hint">Read this slowly.<br>Let it settle.<br>Then share it with your group.</div>
+      <button class="btn-gold" onclick="goTo('screen-share','up')">Share with my group →</button>
+      <button class="btn-ghost" onclick="goTo('screen-q3','down')">Choose a different one</button>
     </div>
   </div>
 
-  <!-- SCREEN 4: PRAYER -->
+  <!-- SCREEN 6: SHARE WITH GROUP -->
+  <div class="screen" id="screen-share">
+    <div class="screen-header">
+      <button class="btn-back" onclick="goTo('screen-declaration','down')">← Back</button>
+      <div class="step-label">Group sharing</div>
+    </div>
+    <div class="s-middle">
+      <div class="s-icon">🗣️</div>
+      <div class="s-title">Tell your group <em>why</em><br>you chose this.</div>
+      <div class="s-rule"></div>
+      <div class="s-instruction">Show them your declaration. Tell them which area drains you most. Tell them why this is the one you need to hear.</div>
+      <div class="s-box" id="share-preview"></div>
+    </div>
+    <div class="s-bottom">
+      <button class="btn-gold" onclick="goTo('screen-prayer','up')">Ready for prayer →</button>
+      <button class="btn-ghost" onclick="goTo('screen-q3','down')">Choose a different one</button>
+    </div>
+  </div>
+
+  <!-- SCREEN 7: PRAYER -->
   <div class="screen" id="screen-prayer">
-    <div class="prayer-top">
-      <button class="btn-back" onclick="goTo('screen-declaration')">← Back</button>
-      <div class="decl-step">Step 2 of 2</div>
+    <div class="screen-header">
+      <button class="btn-back" onclick="goTo('screen-share','down')">← Back</button>
+      <div class="step-label">Prayer pairs</div>
     </div>
-    <div class="prayer-middle">
-      <div class="prayer-icon">🤲</div>
-      <div class="prayer-title">Now <em>speak</em><br>it over them.</div>
-      <div class="prayer-divider"></div>
-      <div class="prayer-instruction">Use their name.<br>Pray the declaration out loud.<br>Speak it like you mean it —<br>because the Father does.</div>
-      <div class="prayer-declaration-preview" id="prayer-preview"></div>
+    <div class="p-middle">
+      <div class="p-icon">🤲</div>
+      <div class="p-title">Now <em>speak</em><br>it over them.</div>
+      <div class="p-rule"></div>
+      <div class="p-instruction">
+        Use their name.<br>
+        Read the declaration out loud over them.<br>
+        Speak it like you mean it —<br>because the Father does.
+      </div>
+      <div class="p-box" id="prayer-preview"></div>
     </div>
-    <div class="prayer-bottom">
-      <button class="btn-secondary" onclick="goTo('screen-welcome')">Done — start again</button>
+    <div class="p-bottom">
+      <button class="btn-gold" onclick="goTo('screen-welcome','up')">Done — start again</button>
     </div>
   </div>
 
@@ -635,53 +659,63 @@
     }
   ];
 
-  let selectedIndex = null;
+  const screenProgress = {
+    'screen-welcome': 0,
+    'screen-q1': 15,
+    'screen-q2': 35,
+    'screen-q3': 55,
+    'screen-declaration': 72,
+    'screen-share': 88,
+    'screen-prayer': 100
+  };
 
   // Build cards
   const container = document.getElementById('cards-container');
   declarations.forEach((d, i) => {
     const card = document.createElement('div');
-    card.className = 'declaration-card';
+    card.className = 'decl-card';
     card.innerHTML = `
-      <div class="card-number">0${i + 1}</div>
-      <div class="card-content">
-        <div class="card-category">${d.category}</div>
-        <div class="card-preview">${d.short}</div>
+      <div class="card-num">0${i+1}</div>
+      <div class="card-body">
+        <div class="card-cat">${d.category}</div>
+        <div class="card-pre">${d.short}</div>
       </div>
-      <div class="card-arrow">→</div>
+      <div class="card-arr">→</div>
     `;
     card.addEventListener('click', () => selectDeclaration(i));
     container.appendChild(card);
   });
 
-  function selectDeclaration(index) {
-    selectedIndex = index;
-    const d = declarations[index];
+  function selectDeclaration(i) {
+    const d = declarations[i];
     document.getElementById('decl-category').textContent = d.category;
     document.getElementById('decl-text').textContent = d.text;
+    document.getElementById('share-preview').textContent = d.text;
     document.getElementById('prayer-preview').textContent = d.text;
-    goTo('screen-declaration');
+    goTo('screen-declaration', 'up');
   }
 
-  function goTo(id) {
+  function goTo(id, direction = 'up') {
     const current = document.querySelector('.screen.active');
     const next = document.getElementById(id);
     if (!next || next === current) return;
 
-    current.classList.add('exit');
+    const exitClass = direction === 'up' ? 'exit-up' : 'exit-down';
+    current.classList.add(exitClass);
     current.classList.remove('active');
+    setTimeout(() => current.classList.remove(exitClass), 500);
 
-    setTimeout(() => {
-      current.classList.remove('exit');
-    }, 500);
-
+    next.style.transform = direction === 'up' ? 'translateY(24px)' : 'translateY(-24px)';
     requestAnimationFrame(() => {
       next.classList.add('active');
+      next.style.transform = '';
     });
 
-    // Scroll cards to top when returning
-    if (id === 'screen-choose') {
-      document.querySelector('.cards-scroll').scrollTop = 0;
+    document.getElementById('progress-bar').style.width = (screenProgress[id] || 0) + '%';
+
+    if (id === 'screen-q3') {
+      const s = document.querySelector('.cards-scroll');
+      if (s) s.scrollTop = 0;
     }
   }
 </script>
