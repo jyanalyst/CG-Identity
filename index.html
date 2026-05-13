@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no" />
+  <title>Declarations</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0D0D0D;
+      --surface: #141414;
+      --border: #2A2A2A;
+      --gold: #C9A84C;
+      --gold-dim: #8A6E2F;
+      --gold-glow: rgba(201, 168, 76, 0.12);
+      --text: #F0EDE6;
+      --text-dim: #6B6560;
+      --text-mid: #A09890;
+      --white: #FFFFFF;
+    }
+
+    html, body {
+      height: 100%;
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      overflow: hidden;
+    }
+
+    .app {
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      max-width: 480px;
+      margin: 0 auto;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* ── SCREENS ── */
+    .screen {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.5s ease, transform 0.5s ease;
+      transform: translateY(20px);
+    }
+    .screen.active {
+      opacity: 1;
+      pointer-events: all;
+      transform: translateY(0);
+    }
+    .screen.exit {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+
+    /* ── AMBIENT BACKGROUND ── */
+    .ambient {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .ambient::before {
+      content: '';
+      position: absolute;
+      top: -30%;
+      left: -20%;
+      width: 60%;
+      height: 60%;
+      background: radial-gradient(ellipse, rgba(201,168,76,0.06) 0%, transparent 70%);
+      animation: drift 8s ease-in-out infinite alternate;
+    }
+    .ambient::after {
+      content: '';
+      position: absolute;
+      bottom: -20%;
+      right: -20%;
+      width: 50%;
+      height: 50%;
+      background: radial-gradient(ellipse, rgba(201,168,76,0.04) 0%, transparent 70%);
+      animation: drift 10s ease-in-out infinite alternate-reverse;
+    }
+    @keyframes drift {
+      from { transform: translate(0, 0); }
+      to { transform: translate(30px, 20px); }
+    }
+
+    /* ── SCREEN 1: WELCOME ── */
+    #screen-welcome {
+      justify-content: center;
+      align-items: center;
+      padding: 48px 32px;
+      text-align: center;
+      z-index: 1;
+    }
+
+    .welcome-eyebrow {
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 32px;
+      opacity: 0;
+      animation: fadeUp 0.8s ease 0.3s forwards;
+    }
+
+    .welcome-title {
+      font-size: clamp(48px, 14vw, 72px);
+      font-weight: 300;
+      line-height: 1.0;
+      letter-spacing: -1px;
+      color: var(--text);
+      margin-bottom: 8px;
+      opacity: 0;
+      animation: fadeUp 0.8s ease 0.5s forwards;
+    }
+
+    .welcome-title em {
+      font-style: italic;
+      color: var(--gold);
+    }
+
+    .welcome-subtitle {
+      font-size: 16px;
+      font-weight: 300;
+      color: var(--text-mid);
+      line-height: 1.7;
+      margin: 28px 0 48px;
+      font-style: italic;
+      opacity: 0;
+      animation: fadeUp 0.8s ease 0.7s forwards;
+    }
+
+    .welcome-divider {
+      width: 1px;
+      height: 48px;
+      background: linear-gradient(to bottom, transparent, var(--gold), transparent);
+      margin: 0 auto 48px;
+      opacity: 0;
+      animation: fadeUp 0.8s ease 0.9s forwards;
+    }
+
+    .welcome-question {
+      font-size: clamp(20px, 5vw, 26px);
+      font-weight: 300;
+      line-height: 1.4;
+      color: var(--text);
+      margin-bottom: 48px;
+      opacity: 0;
+      animation: fadeUp 0.8s ease 1.1s forwards;
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      background: transparent;
+      border: 1px solid var(--gold);
+      color: var(--gold);
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      padding: 16px 32px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      opacity: 0;
+      animation: fadeUp 0.8s ease 1.3s forwards;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .btn-primary:active {
+      background: var(--gold-glow);
+      transform: scale(0.97);
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── SCREEN 2: CHOOSE ── */
+    #screen-choose {
+      z-index: 1;
+      overflow: hidden;
+    }
+
+    .choose-header {
+      padding: 48px 28px 24px;
+      flex-shrink: 0;
+    }
+
+    .choose-eyebrow {
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--gold-dim);
+      margin-bottom: 16px;
+    }
+
+    .choose-title {
+      font-size: clamp(26px, 7vw, 36px);
+      font-weight: 300;
+      line-height: 1.2;
+      color: var(--text);
+    }
+
+    .choose-title em {
+      font-style: italic;
+      color: var(--gold);
+    }
+
+    .cards-scroll {
+      flex: 1;
+      overflow-y: auto;
+      padding: 8px 28px 48px;
+      -webkit-overflow-scrolling: touch;
+    }
+    .cards-scroll::-webkit-scrollbar { display: none; }
+
+    .declaration-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 2px;
+      padding: 20px 24px;
+      margin-bottom: 10px;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      -webkit-tap-highlight-color: transparent;
+      position: relative;
+      overflow: hidden;
+    }
+    .declaration-card::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: var(--gold);
+      transform: scaleY(0);
+      transition: transform 0.25s ease;
+    }
+    .declaration-card:active {
+      background: var(--gold-glow);
+      border-color: var(--gold-dim);
+    }
+    .declaration-card:active::before {
+      transform: scaleY(1);
+    }
+
+    .card-number {
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      color: var(--gold-dim);
+      letter-spacing: 2px;
+      flex-shrink: 0;
+      width: 24px;
+    }
+
+    .card-content {
+      flex: 1;
+    }
+
+    .card-category {
+      font-family: 'DM Mono', monospace;
+      font-size: 9px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      margin-bottom: 4px;
+    }
+
+    .card-preview {
+      font-size: 15px;
+      font-weight: 300;
+      color: var(--text-mid);
+      line-height: 1.4;
+      font-style: italic;
+    }
+
+    .card-arrow {
+      color: var(--gold-dim);
+      font-size: 16px;
+      flex-shrink: 0;
+      transition: transform 0.2s ease;
+    }
+    .declaration-card:active .card-arrow {
+      transform: translateX(4px);
+    }
+
+    /* ── SCREEN 3: DECLARATION ── */
+    #screen-declaration {
+      z-index: 1;
+      justify-content: space-between;
+      padding: 48px 32px;
+    }
+
+    .decl-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .btn-back {
+      background: none;
+      border: none;
+      color: var(--text-dim);
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      cursor: pointer;
+      padding: 8px 0;
+      -webkit-tap-highlight-color: transparent;
+      transition: color 0.2s;
+    }
+    .btn-back:active { color: var(--text); }
+
+    .decl-step {
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 3px;
+      color: var(--gold-dim);
+    }
+
+    .decl-middle {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 32px 0;
+    }
+
+    .decl-category {
+      font-family: 'DM Mono', monospace;
+      font-size: 9px;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 24px;
+    }
+
+    .decl-ornament {
+      width: 40px;
+      height: 1px;
+      background: var(--gold);
+      margin-bottom: 32px;
+    }
+
+    .decl-text {
+      font-size: clamp(22px, 6vw, 30px);
+      font-weight: 300;
+      line-height: 1.6;
+      color: var(--text);
+      font-style: italic;
+    }
+
+    .decl-text strong {
+      font-style: normal;
+      font-weight: 400;
+      color: var(--white);
+    }
+
+    .decl-bottom {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .decl-instruction {
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 2px;
+      color: var(--text-dim);
+      text-align: center;
+      line-height: 1.8;
+      text-transform: uppercase;
+    }
+
+    .btn-secondary {
+      background: var(--gold);
+      border: none;
+      color: #0D0D0D;
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      padding: 18px 32px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      -webkit-tap-highlight-color: transparent;
+      width: 100%;
+    }
+    .btn-secondary:active {
+      opacity: 0.85;
+      transform: scale(0.98);
+    }
+
+    .btn-ghost {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text-dim);
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      padding: 14px 32px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      -webkit-tap-highlight-color: transparent;
+      width: 100%;
+    }
+    .btn-ghost:active {
+      border-color: var(--gold-dim);
+      color: var(--text);
+    }
+
+    /* ── SCREEN 4: PRAYER ── */
+    #screen-prayer {
+      z-index: 1;
+      justify-content: space-between;
+      padding: 48px 32px;
+    }
+
+    .prayer-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .prayer-middle {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      text-align: center;
+      padding: 32px 0;
+    }
+
+    .prayer-icon {
+      font-size: 48px;
+      margin-bottom: 24px;
+      opacity: 0.8;
+    }
+
+    .prayer-title {
+      font-size: clamp(28px, 8vw, 40px);
+      font-weight: 300;
+      color: var(--text);
+      margin-bottom: 16px;
+      line-height: 1.2;
+    }
+
+    .prayer-title em {
+      font-style: italic;
+      color: var(--gold);
+    }
+
+    .prayer-divider {
+      width: 40px;
+      height: 1px;
+      background: var(--gold);
+      margin: 24px auto;
+    }
+
+    .prayer-instruction {
+      font-size: 17px;
+      font-weight: 300;
+      font-style: italic;
+      color: var(--text-mid);
+      line-height: 1.7;
+      margin-bottom: 32px;
+    }
+
+    .prayer-declaration-preview {
+      background: var(--gold-glow);
+      border: 1px solid var(--gold-dim);
+      padding: 20px 24px;
+      font-size: 15px;
+      font-style: italic;
+      font-weight: 300;
+      color: var(--text);
+      line-height: 1.6;
+      text-align: left;
+    }
+
+    .prayer-bottom {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    /* ── GRAIN OVERLAY ── */
+    .grain {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 999;
+      opacity: 0.025;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+      background-size: 128px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="ambient"></div>
+<div class="grain"></div>
+
+<div class="app">
+
+  <!-- SCREEN 1: WELCOME -->
+  <div class="screen active" id="screen-welcome">
+    <div class="welcome-eyebrow">CG · Tonight</div>
+    <div class="welcome-title">Hear it<br><em>declared</em><br>over you.</div>
+    <div class="welcome-subtitle">Not what you tell yourself.<br>What the Father already said.</div>
+    <div class="welcome-divider"></div>
+    <div class="welcome-question">Which would you love to hear declared over you?</div>
+    <button class="btn-primary" onclick="goTo('screen-choose')">
+      Choose yours →
+    </button>
+  </div>
+
+  <!-- SCREEN 2: CHOOSE -->
+  <div class="screen" id="screen-choose">
+    <div class="choose-header">
+      <div class="choose-eyebrow">Step 1 of 2</div>
+      <div class="choose-title">Which would you love<br>to hear <em>declared</em><br>over you?</div>
+    </div>
+    <div class="cards-scroll" id="cards-container"></div>
+  </div>
+
+  <!-- SCREEN 3: DECLARATION -->
+  <div class="screen" id="screen-declaration">
+    <div class="decl-top">
+      <button class="btn-back" onclick="goTo('screen-choose')">← Back</button>
+      <div class="decl-step">Step 1 of 2</div>
+    </div>
+    <div class="decl-middle">
+      <div class="decl-category" id="decl-category"></div>
+      <div class="decl-ornament"></div>
+      <div class="decl-text" id="decl-text"></div>
+    </div>
+    <div class="decl-bottom">
+      <div class="decl-instruction">Read this slowly.<br>Let it settle.<br>Then show it to your partner.</div>
+      <button class="btn-secondary" onclick="goTo('screen-prayer')">Show my partner →</button>
+      <button class="btn-ghost" onclick="goTo('screen-choose')">Choose a different one</button>
+    </div>
+  </div>
+
+  <!-- SCREEN 4: PRAYER -->
+  <div class="screen" id="screen-prayer">
+    <div class="prayer-top">
+      <button class="btn-back" onclick="goTo('screen-declaration')">← Back</button>
+      <div class="decl-step">Step 2 of 2</div>
+    </div>
+    <div class="prayer-middle">
+      <div class="prayer-icon">🤲</div>
+      <div class="prayer-title">Now <em>speak</em><br>it over them.</div>
+      <div class="prayer-divider"></div>
+      <div class="prayer-instruction">Use their name.<br>Pray the declaration out loud.<br>Speak it like you mean it —<br>because the Father does.</div>
+      <div class="prayer-declaration-preview" id="prayer-preview"></div>
+    </div>
+    <div class="prayer-bottom">
+      <button class="btn-secondary" onclick="goTo('screen-welcome')">Done — start again</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  const declarations = [
+    {
+      category: "Waiting & Unanswered Prayer",
+      short: "I am not forgotten...",
+      text: "I am not forgotten. My waiting is not evidence of God's absence. He sees me — and He has not moved on."
+    },
+    {
+      category: "Loss & Grief",
+      short: "I am held in the middle of it...",
+      text: "I am held — not despite what I have lost, but in the middle of it. My pain does not disqualify me from the Father's love."
+    },
+    {
+      category: "Feeling Not Enough",
+      short: "My worth was settled at the cross...",
+      text: "I am enough — not because of what I have achieved, but because of what Christ has already done. My worth was settled at the cross — not at my last performance."
+    },
+    {
+      category: "Single & Waiting",
+      short: "I am fully loved, fully seen, fully known...",
+      text: "I am complete in Christ — not half a person waiting to be whole. I am fully loved, fully seen, and fully known — today, not just when the answer comes."
+    },
+    {
+      category: "Parenting & Falling Short",
+      short: "I am not disqualified by my worst moments...",
+      text: "I am not disqualified by my worst moments. I am a child of God who is learning — and the same grace I need to receive, I can give."
+    },
+    {
+      category: "Sickness & Unanswered Healing",
+      short: "My body does not define my identity...",
+      text: "My body does not define my identity. I am the righteousness of God in Christ — whole in spirit, held in body, and not abandoned in my waiting."
+    },
+    {
+      category: "Work & Performance Pressure",
+      short: "My value is not my output...",
+      text: "My value is not my output. I am not what I produce. I am a child of God — and that identity does not fluctuate with my results."
+    },
+    {
+      category: "Shame & Past Failure",
+      short: "I am who the Father says I am...",
+      text: "I am not what I did. I am not what was done to me. I am who the Father says I am — and He has never revised that declaration."
+    },
+    {
+      category: "Fear & Feeling Unsettled",
+      short: "I am anchored in what He said...",
+      text: "I am not moved by what I see — because I am anchored in what He said. The Lord is at my right hand. I will not be shaken."
+    },
+    {
+      category: "For Your Children",
+      short: "You are loved before you perform...",
+      text: "You are loved before you perform. You are valued before you achieve. You are mine — and nothing you do will ever change that."
+    }
+  ];
+
+  let selectedIndex = null;
+
+  // Build cards
+  const container = document.getElementById('cards-container');
+  declarations.forEach((d, i) => {
+    const card = document.createElement('div');
+    card.className = 'declaration-card';
+    card.innerHTML = `
+      <div class="card-number">0${i + 1}</div>
+      <div class="card-content">
+        <div class="card-category">${d.category}</div>
+        <div class="card-preview">${d.short}</div>
+      </div>
+      <div class="card-arrow">→</div>
+    `;
+    card.addEventListener('click', () => selectDeclaration(i));
+    container.appendChild(card);
+  });
+
+  function selectDeclaration(index) {
+    selectedIndex = index;
+    const d = declarations[index];
+    document.getElementById('decl-category').textContent = d.category;
+    document.getElementById('decl-text').textContent = d.text;
+    document.getElementById('prayer-preview').textContent = d.text;
+    goTo('screen-declaration');
+  }
+
+  function goTo(id) {
+    const current = document.querySelector('.screen.active');
+    const next = document.getElementById(id);
+    if (!next || next === current) return;
+
+    current.classList.add('exit');
+    current.classList.remove('active');
+
+    setTimeout(() => {
+      current.classList.remove('exit');
+    }, 500);
+
+    requestAnimationFrame(() => {
+      next.classList.add('active');
+    });
+
+    // Scroll cards to top when returning
+    if (id === 'screen-choose') {
+      document.querySelector('.cards-scroll').scrollTop = 0;
+    }
+  }
+</script>
+
+</body>
+</html>
