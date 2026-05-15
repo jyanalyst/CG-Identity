@@ -543,13 +543,13 @@
     </div>
     <div class="q-body">
       <div class="q-number">Question 01</div>
-      <div class="q-question">Have you ever felt what it's like to be running on <em>empty?</em></div>
+      <div class="q-question">When was the last time you felt like you were running on <em>empty?</em></div>
       <div class="q-rule"></div>
       <div class="q-context">When the jar is empty — we become someone we don't recognise. Reactive. Harsh. Withdrawn. The voice our family hears isn't the voice we want them to hear.</div>
       <div class="q-prompt">
         <span>Share with your group —</span><br>
         What did running on empty look like for you?<br>
-        When did you last feel it?
+        What did the people closest to you experience?
       </div>
     </div>
     <div class="q-footer">
@@ -572,8 +572,8 @@
         <span>He doesn't attack your strength.</span><br>
         He attacks your empty place.<br><br>
         <span>Share with your group —</span><br>
-        Where does the enemy whisper to you most?<br>
-        What does he say?
+        Which area drains you the most?<br>
+        And in that area — what does the enemy whisper to you?
       </div>
     </div>
     <div class="q-footer">
@@ -709,8 +709,8 @@
     },
     {
       category: "Single & Waiting",
-      short: "I am fully loved, fully seen, fully known...",
-      text: "I am complete in Christ — not half a person waiting to be whole. I am fully loved, fully seen, and fully known — today, not just when the answer comes.",
+      short: "I am not on hold...",
+      text: "I am not on hold. I am fully loved, fully seen, and fully known — today, not just when the answer comes. The Father is not waiting for my circumstances to change before He calls me His own.",
       scriptures: [
         {
           ref: "Colossians 2:10",
@@ -817,6 +817,7 @@
       category: "For Your Children",
       short: "You are loved before you perform...",
       text: "You are loved before you perform. You are valued before you achieve. You are mine — and nothing you do will ever change that.",
+      note: "For parents — choose this to take home and speak over your children tonight.",
       scriptures: [
         {
           ref: "Luke 3:22",
@@ -829,6 +830,25 @@
         {
           ref: "1 John 4:19",
           text: "We love because he first loved us."
+        }
+      ]
+    },
+    {
+      category: "Betrayal & Broken Trust",
+      short: "The one who left does not get to write my worth...",
+      text: "I am not defined by what was done to me or what was taken from me. The one who left does not get to write my worth. I am still chosen. Still loved. Still held — by a Father who has never broken His word.",
+      scriptures: [
+        {
+          ref: "Psalm 27:10",
+          text: "Though my father and mother forsake me, the Lord will receive me."
+        },
+        {
+          ref: "Isaiah 54:10",
+          text: "Though the mountains be shaken and the hills be removed, yet my unfailing love for you will not be shaken, nor my covenant of peace be removed, says the Lord."
+        },
+        {
+          ref: "Hebrews 13:5",
+          text: "Never will I leave you; never will I forsake you."
         }
       ]
     }
@@ -850,7 +870,7 @@
     const card = document.createElement('div');
     card.className = 'decl-card';
     card.innerHTML = `
-      <div class="card-num">0${i+1}</div>
+      <div class="card-num">${String(i+1).padStart(2,'0')}</div>
       <div class="card-body">
         <div class="card-cat">${d.category}</div>
         <div class="card-pre">${d.short}</div>
@@ -871,6 +891,26 @@
     // Build scripture boxes
     const sc = document.getElementById('scriptures-container');
     sc.innerHTML = '';
+
+    // Show note if present
+    if (d.note) {
+      const note = document.createElement('div');
+      note.style.cssText = `
+        background: var(--gold-glow);
+        border: 1px solid var(--gold-dim);
+        padding: 12px 16px;
+        margin-bottom: 12px;
+        font-family: 'DM Mono', monospace;
+        font-size: 10px;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: var(--gold);
+        line-height: 1.8;
+      `;
+      note.textContent = d.note;
+      sc.appendChild(note);
+    }
+
     d.scriptures.forEach(s => {
       const box = document.createElement('div');
       box.className = 'scripture-box';
