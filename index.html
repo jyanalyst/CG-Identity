@@ -613,54 +613,16 @@
       <div id="scriptures-container"></div>
     </div>
     <div class="d-bottom">
-      <div class="d-hint">Read this slowly.<br>Let it settle.<br>Then share it with your group.</div>
-      <button class="btn-gold" onclick="goTo('screen-share','up')">Share with my group →</button>
-      <button class="btn-ghost" onclick="goTo('screen-q3','down')">Choose a different one</button>
-    </div>
-  </div>
-
-  <!-- SCREEN 6: SHARE WITH GROUP -->
-  <div class="screen" id="screen-share">
-    <div class="screen-header">
-      <button class="btn-back" onclick="goTo('screen-declaration','down')">← Back</button>
-      <div class="step-label">Group sharing</div>
-    </div>
-    <div class="s-middle">
-      <div class="s-icon">🗣️</div>
-      <div class="s-title">Tell your group <em>why</em><br>you chose this.</div>
-      <div class="s-rule"></div>
-      <div class="s-instruction">Show them your declaration. Tell them which area drains you most. Tell them why this is the one you need to hear.</div>
-      <div class="s-box" id="share-preview"></div>
-      <div class="s-ref" id="share-ref"></div>
-    </div>
-    <div class="s-bottom">
-      <button class="btn-gold" onclick="goTo('screen-prayer','up')">Ready for prayer →</button>
-      <button class="btn-ghost" onclick="goTo('screen-q3','down')">Choose a different one</button>
-    </div>
-  </div>
-
-  <!-- SCREEN 7: PRAYER -->
-  <div class="screen" id="screen-prayer">
-    <div class="screen-header">
-      <button class="btn-back" onclick="goTo('screen-share','down')">← Back</button>
-      <div class="step-label">Prayer pairs</div>
-    </div>
-    <div class="p-middle">
-      <div class="p-icon">🤲</div>
-      <div class="p-title">Now <em>speak</em><br>it over them.</div>
-      <div class="p-rule"></div>
-      <div class="p-instruction">
-        Use their name.<br>
-        Read the declaration out loud over them.<br>
-        Speak it like you mean it —<br>because the Father does.
+      <div class="d-hint">
+        Read this slowly.<br>
+        Let it settle.<br>
+        Then show it to your prayer partner.
       </div>
-      <div class="p-box" id="prayer-preview"></div>
-      <div class="p-ref" id="prayer-ref"></div>
-    </div>
-    <div class="p-bottom">
-      <button class="btn-gold" onclick="goTo('screen-welcome','up')">Done — start again</button>
+      <button class="btn-ghost" onclick="goTo('screen-q3','down')">Choose a different one</button>
     </div>
   </div>
+
+  <!-- SCREEN 7: PRAYER removed - declaration is final destination -->
 
 </div>
 
@@ -863,9 +825,7 @@
     'screen-q1': 15,
     'screen-q2': 35,
     'screen-q3': 55,
-    'screen-declaration': 72,
-    'screen-share': 88,
-    'screen-prayer': 100
+    'screen-declaration': 100
   };
 
   // Build cards
@@ -925,14 +885,6 @@
       `;
       sc.appendChild(box);
     });
-
-    // Share screen
-    document.getElementById('share-preview').textContent = d.text;
-    document.getElementById('share-ref').textContent = d.scriptures.map(s => s.ref).join(' · ');
-
-    // Prayer screen
-    document.getElementById('prayer-preview').textContent = d.text;
-    document.getElementById('prayer-ref').textContent = d.scriptures.map(s => s.ref).join(' · ');
 
     goTo('screen-declaration', 'up');
   }
